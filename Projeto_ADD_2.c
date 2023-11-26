@@ -12,15 +12,13 @@ typedef struct{
     int rt;
     int shamt;
     int funct;
-    int endereco;
-    int enderecoIme;
 }formR;
 
-formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
+formR memoriainstrucao(int pc,int primeiro,int segundo,int terceiro){
     formR r;
     printf("\n ################ MEMORIA DE INSTRUCAO ################");
-    if (i == -4){ 
-        printf("\n codigo salvo na linha %i \n cod.intrucao: 0 /",i);
+    if (pc == -4){ 
+        printf("\n codigo salvo na linha %i \n cod.intrucao: 0 /",pc);
         r.codInst = 0;
         if (segundo == 1){
             r.rs = 18;
@@ -56,20 +54,19 @@ formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
         r.shamt = 0;
         r.funct = 32;
         return r;
-    }else if (i == 0){
-            printf(" \n instrucao  da linha %i:ADD $S0,$S1,$S2",i);
-            printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 19 / RT: 20 / RD: 18 / shamt: 0 / funct: 32",i);
+    }else if (pc == 0){
+            printf(" \n instrucao  da linha %i:ADD $S0,$S1,$S2",pc);
+            printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 19 / RT: 20 / RD: 18 / shamt: 0 / funct: 32",pc);
             r.codInst = 0;
             r.rs = 19;
             r.rt = 20;
             r.rd = 18;
             r.shamt = 0;
             r.funct = 32;
-            
             return r;
-    }else if (i == 4){
-            printf(" \n instrucao  da linha %i:ADD $S0,$S1,$S2",i);
-            printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 32",i);
+    }else if (pc == 4){
+            printf(" \n instrucao  da linha %i:ADD $S1,$S0,$S2",pc);
+            printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 32",pc);
             r.codInst = 0;
             r.rs = 18;
             r.rt = 20;
@@ -77,9 +74,9 @@ formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
             r.shamt = 0;
             r.funct = 32;
             return r;
-    }else if (i == 8) {
-        printf(" \n instrucao  da linha %i:SUB $S0,$S1,$S2",i);
-        printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 34",i);
+    }else if (pc == 8) {
+        printf(" \n instrucao  da linha %i:SUB $S0,$S1,$S2",pc);
+        printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 34",pc);
         r.codInst = 0;
         r.rs = 19;
         r.rt = 20;
@@ -88,6 +85,7 @@ formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
         r.funct = 34;
         return r;
     }
+    return r;
 };
 
 formR registradores(formR r){
@@ -134,14 +132,12 @@ formR ULA(formR r){
     }else if (r.codInst == 0 && r.funct == 34 ){
         r.rs -= r.rt;
         printf("\n realiza a subtracao de rs com rt");
-    }
-
-
+    };
     return r;
 };
 void memoriadados(formR r){
     printf("\n########## MEMORIA DE DADOS ##########");
-    if (r.codInst == 0 && r.funct == 32 || r.funct == 34){
+    if (r.codInst == 0 && (r.funct == 32 || r.funct == 34)){
         if (r.rd == s0){
             s0 = r.rs;
             printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
@@ -151,7 +147,7 @@ void memoriadados(formR r){
             printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
             printf("\n n Valor atual do registrador $S1: %i \n ",s1);
         }else if (r.rd == s2){
-            s1 = r.rs;
+            s2 = r.rs;
             printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
             printf("\n n Valor atual do registrador $S2: %i \n ",s1);
         }
@@ -180,13 +176,13 @@ void def_valores() {
 
 int main(){
     int menu=23;
-    int pc=0;
+    int pc=-4;
     int aux=1;
     int primeiro,segundo,terceiro; // operandos 
     formR r;
     def_valores();
     while (menu != 0){
-    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD  \n 3.SUB");
+    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD  \n 2.SUB");
     scanf("%i",&menu);
         switch (menu)
         {
@@ -205,31 +201,14 @@ int main(){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i",&aux);
                 pc += 4;
+                printf(" valor de PC: %i",pc);
                 r=memoriainstrucao(pc,primeiro,segundo,terceiro);
                 r=registradores(r);
                 r=ULA(r);
                 memoriadados(r);
             };
             break;
-        case 2:
-            aux = 1;
-            if (pc != 4){
-                pc = 4;
-            };
-            r=memoriainstrucao(pc,primeiro,segundo,terceiro);
-            r=registradores(r);
-            r=ULA(r);
-            memoriadados(r);
-            while (aux == 1){
-                printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
-                scanf("%i",&aux);
-                pc += 4;
-                r=memoriainstrucao(pc,primeiro,segundo,terceiro);
-                r=registradores(r);
-                r=ULA(r);
-                memoriadados(r);
-            };
-        case 3: 
+        case 2: 
             aux = 1;
             if(pc != 8) {
                 pc = 8;
@@ -242,6 +221,7 @@ int main(){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i", &aux);
                 pc += 4;
+                printf(" valor de PC: %i",pc);
                 r=memoriainstrucao(pc,primeiro,segundo,terceiro);
                 r=registradores(r);
                 r=ULA(r);
