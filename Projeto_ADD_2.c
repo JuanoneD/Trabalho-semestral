@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int s0;
-int s1;
-int s2;
+int s0 = 1;
+int s1 = 2;
+int s2 = 3;
 
 typedef struct{
     int codInst;
@@ -77,7 +77,10 @@ formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
             r.shamt = 0;
             r.funct = 32;
             return r;
-    };
+    }else {
+        printf("\nlinha vazia\n");
+        return r;
+    }
 };
 
 formR registradores(formR r){
@@ -176,7 +179,7 @@ int main(){
     int primeiro,segundo,terceiro; // operandos 
     formR r;
     while (menu != 0){
-    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD  \n)");
+    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD personalizado; \n2.ADD $S0,$S1,$S2  \n)");
     scanf("%i",&menu);
         switch (menu)
         {
@@ -212,6 +215,7 @@ int main(){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i",&aux);
                 pc += 4;
+                printf("\n valor do PC: %i \n ",pc);
                 r=memoriainstrucao(pc,primeiro,segundo,terceiro);
                 r=registradores(r);
                 r=ULA(r);

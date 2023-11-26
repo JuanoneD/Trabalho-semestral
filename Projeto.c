@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int s0;
-int s1;
-int s2;
+int s0 = 1;
+int s1 = 2;
+int s2 = 3;
 
 typedef struct{
     int codInst;
@@ -16,20 +16,60 @@ typedef struct{
     int enderecoIme;
 }formR;
 
-formR memoriainstrucao(int i){
+formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
     formR r;
     printf("\n ################ MEMORIA DE INSTRUCAO ################");
-    if (i == 0){
-            printf("\n codigo salvo na linha 0: \n cod.intrucao: 0 /  RS: 19 / RT: 20 / RD: 18 / shamt: 0 / funct: 32");
+    if (i == -4){ 
+        printf("\n codigo salvo na linha %i \n cod.intrucao: 0 /",i);
+        r.codInst = 0;
+        if (segundo == 1){
+            r.rs = 18;
+            printf(" RS: %i /",r.rs);
+        }else if (segundo == 2){
+            r.rs = 19;
+            printf(" RS: %i /",r.rs);
+        }else if (segundo == 3){
+            r.rs = 20;
+            printf(" RS: %i /",r.rs);
+        };
+        if (terceiro == 1){
+            r.rt = 18;
+            printf(" RT : %i /",r.rt);
+        }else if (terceiro == 2){
+            r.rt = 19;
+            printf(" RT : %i /",r.rt);
+        }else if (terceiro == 3){
+            r.rt = 20;
+            printf(" RT : %i /",r.rt);
+        };        
+        if (primeiro == 1){
+            r.rd = 18;
+            printf(" RD : %i /",r.rd);
+        }else if (primeiro == 2){
+            r.rd = 19;
+            printf(" RD: %i /",r.rd);
+        }else if (primeiro == 3){
+            r.rd = 20;
+            printf(" RD: %i /",r.rd);
+        };
+        printf(" shamt: 0 / funct: 32 \n");
+        r.shamt = 0;
+        r.funct = 32;
+        return r;
+    }else if (i == 0){
+            printf(" \n instrucao  da linha %i:ADD $S0,$S1,$S2",i);
+            printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 19 / RT: 20 / RD: 18 / shamt: 0 / funct: 32",i);
             r.codInst = 0;
             r.rs = 19;
             r.rt = 20;
             r.rd = 18;
             r.shamt = 0;
             r.funct = 32;
+            
             return r;
     }else if (i == 4){
-            printf("\n codigo salvo na linha 0: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 32");
+            printf(" \n instrucao  da linha %i:ADD $S0,$S1,$S2",i);
+            printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 32",i);
             r.codInst = 0;
             r.rs = 18;
             r.rt = 20;
@@ -37,7 +77,10 @@ formR memoriainstrucao(int i){
             r.shamt = 0;
             r.funct = 32;
             return r;
-    };
+    }else {
+        printf("\nlinha vazia\n");
+        return r;
+    }
 };
 
 formR registradores(formR r){
@@ -112,39 +155,49 @@ void memoriadados(formR r){
 }
 
 //FIM FORMATO R
-
-
-
-
-int main(){
+void def_valores(int *primeiro,int *segundo,int *terceiro){
     printf("\n Escreva o valor do resgistrado $s0: ");
     scanf("%i",&s0);
     printf("\n Escreva o valor do registradoor $s1: ");
     scanf("%i",&s1);
     printf("\n Escreva o valor do registrador $s2: ");
     scanf("%i",&s2);
+    printf("Escolha o primeiro operando: 1 = $S0 / 2 = $S1 / 3 = $S2");
+    scanf("%i",&*primeiro);
+    printf("Escolha o segundo operando: 1 = $S0 / 2 = $S1 / 3 = $S2");
+    scanf("%i",&*segundo);
+    printf("Escolha o terceiro operando: 1 = $S0 / 2 = $S1 / 3 = $S2 ");
+    scanf("%i",&*terceiro);
+};
+
+
+
+int main(){
     int menu=23;
     int pc=0;
     int aux=1;
+    int primeiro,segundo,terceiro; // operandos 
     formR r;
     while (menu != 0){
-    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD $S0,$S1,$S2 \n 2.ADD $S1,$S0,$S2 \n)");
+    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD personalizado; \n2.ADD $S0,$S1,$S2  \n)");
     scanf("%i",&menu);
         switch (menu)
         {
         case 1:
-            if (pc != 0){
-                pc = 0;
+            def_valores(&primeiro,&segundo,&terceiro);
+            if (pc != -4){
+                pc = -4;
             };
-            r=memoriainstrucao(pc);
-            r=registradores(r);
-            r=ULA(r);
-            memoriadados(r);
+                r=memoriainstrucao(pc,primeiro,segundo,terceiro);
+                r=registradores(r);
+                r=ULA(r);
+                memoriadados(r);
+
             while (aux == 1){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i",&aux);
                 pc += 4;
-                r=memoriainstrucao(pc);
+                r=memoriainstrucao(pc,primeiro,segundo,terceiro);
                 r=registradores(r);
                 r=ULA(r);
                 memoriadados(r);
@@ -154,7 +207,7 @@ int main(){
             if (pc != 4){
                 pc = 4;
             };
-            r=memoriainstrucao(pc);
+            r=memoriainstrucao(pc,primeiro,segundo,terceiro);
             r=registradores(r);
             r=ULA(r);
             memoriadados(r);
@@ -162,7 +215,8 @@ int main(){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i",&aux);
                 pc += 4;
-                r=memoriainstrucao(pc);
+                printf("\n valor do PC: %i \n ",pc);
+                r=memoriainstrucao(pc,primeiro,segundo,terceiro);
                 r=registradores(r);
                 r=ULA(r);
                 memoriadados(r);
