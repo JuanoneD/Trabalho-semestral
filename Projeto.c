@@ -121,7 +121,7 @@ int main(){
     int aux=1;
     formR r;
     while (menu != 0){
-    printf("\n ################ MENU ################ \n 0.sair \n 1.ADD $S0,$S1,$S2 \n)");
+    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD $S0,$S1,$S2 \n 2.ADD $S1,$S0,$S2 \n)");
     scanf("%i",&menu);
         switch (menu)
         {
@@ -142,8 +142,26 @@ int main(){
                 r=ULA(r);
                 memoriadados(r);
             };
-
             break;
+        case 2:
+            if (pc != 4){
+                pc = 4;
+            };
+            r=memoriainstrucao(pc);
+            r=registradores(r);
+            r=ULA(r);
+            memoriadados(r);
+            while (aux == 1){
+                printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
+                scanf("%i",&aux);
+                pc += 4;
+                r=memoriainstrucao(pc);
+                r=registradores(r);
+                r=ULA(r);
+                memoriadados(r);
+            };
+            break;
+
         
         default:
             break;
