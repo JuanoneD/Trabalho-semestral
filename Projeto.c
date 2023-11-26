@@ -28,6 +28,8 @@ formR memoriainstrucao(int i){
             r.shamt = 0;
             r.funct = 32;
             return r;
+    }else if (i == 4){
+        
     }
 };
 
@@ -69,9 +71,12 @@ formR registradores(formR r){
 formR ULA(formR r){
     printf("\n ################ ULA ################");
     if (r.codInst == 0 && r.funct == 32){
-        r.rd = r.rs + r.rt;
+        r.rs += r.rt;
         printf("\n realiza a soma do rs com rt");
         return r;
+    }else if (r.codInst == 0 && r.funct == 34 ){
+        r.rs -= r.rt;
+        printf("\n realiza a subtracao de rs com rt");
     }
 
 
@@ -80,8 +85,22 @@ formR ULA(formR r){
 void memoriadados(formR r){
     printf("\n########## MEMORIA DE DADOS ##########");
     if (r.codInst == 0 && r.funct == 32){
-        s0 = r.rd;
-        printf("\n salva o valor da soma feita pela ULA e devolve para os registradores");
+        if (r.rd == s0){
+            s0 = r.rs;
+            printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
+            printf("\n n Valor atual do registrador $S0: %i \n ",s0);
+        }else if (r.rd == s1){
+            s1 = r.rs;
+            printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
+            printf("\n n Valor atual do registrador $S1: %i \n ",s1);
+        }else if (r.rd == s2){
+            s1 = r.rs;
+            printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
+            printf("\n n Valor atual do registrador $S2: %i \n ",s1);
+        }
+
+    }else if (r.codInst == 0 && r.funct == 34){
+
     }
 }
 
@@ -102,7 +121,7 @@ int main(){
     int aux=1;
     formR r;
     while (menu != 0){
-    printf("\n ################ MENU ################ \n 0.sair \n 1.ADD $S0,$S1,$S2 \n");
+    printf("\n ################ MENU ################ \n 0.sair \n 1.ADD $S0,$S1,$S2 \n)");
     scanf("%i",&menu);
         switch (menu)
         {
@@ -114,7 +133,6 @@ int main(){
             r=registradores(r);
             r=ULA(r);
             memoriadados(r);
-            printf("\n valor de $s0: %i \n novo valor do pc: %i ",s0,pc);
             while (aux == 1){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i",&aux);
