@@ -16,19 +16,6 @@ typedef struct{
     int enderecoIme;
 }formR;
 
-// typedef struct{
-//     int codInst;
-//     int endereco;
-// }formJ;
-
-// typedef struct{
-//     int codInst;
-//     int rs;
-//     int rt;
-//     int enderecoIme;
-// }formI;
-
-// FORMATO R
 formR memoriainstrucao(int i){
     formR r;
     printf("\n ################ MEMORIA DE INSTRUCAO ################");
@@ -42,7 +29,6 @@ formR memoriainstrucao(int i){
             r.funct = 32;
             return r;
     }
-    return r;
 };
 
 formR registradores(formR r){
