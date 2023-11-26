@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int s0 = 1;
-int s1 = 2;
-int s2 = 3;
+int s0;
+int s1;
+int s2;
 
 typedef struct{
     int codInst;
@@ -77,8 +77,15 @@ formR memoriainstrucao(int i,int primeiro,int segundo,int terceiro){
             r.shamt = 0;
             r.funct = 32;
             return r;
-    }else {
-        printf("\nlinha vazia\n");
+    }else if (i == 8) {
+        printf(" \n instrucao  da linha %i:SUB $S0,$S1,$S2",i);
+        printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 34",i);
+        r.codInst = 0;
+        r.rs = 19;
+        r.rt = 20;
+        r.rd = 18;
+        r.shamt = 0;
+        r.funct = 34;
         return r;
     }
 };
@@ -134,7 +141,7 @@ formR ULA(formR r){
 };
 void memoriadados(formR r){
     printf("\n########## MEMORIA DE DADOS ##########");
-    if (r.codInst == 0 && r.funct == 32){
+    if (r.codInst == 0 && r.funct == 32 || r.funct == 34){
         if (r.rd == s0){
             s0 = r.rs;
             printf("\n Devolve o valor  obitido pela a ULA e devolve para o 1 operando");
@@ -149,28 +156,27 @@ void memoriadados(formR r){
             printf("\n n Valor atual do registrador $S2: %i \n ",s1);
         }
 
-    }else if (r.codInst == 0 && r.funct == 34){
-
     }
 }
 
 //FIM FORMATO R
-void def_valores(int *primeiro,int *segundo,int *terceiro){
-    printf("\n Escreva o valor do resgistrado $s0: ");
-    scanf("%i",&s0);
-    printf("\n Escreva o valor do registradoor $s1: ");
-    scanf("%i",&s1);
-    printf("\n Escreva o valor do registrador $s2: ");
-    scanf("%i",&s2);
-    printf("Escolha o primeiro operando: 1 = $S0 / 2 = $S1 / 3 = $S2");
+void def_operandos(int *primeiro,int *segundo,int *terceiro){
+    printf("Escolha o primeiro operando: 1 = $S0 / 2 = $S1 / 3 = $S2 ");
     scanf("%i",&*primeiro);
-    printf("Escolha o segundo operando: 1 = $S0 / 2 = $S1 / 3 = $S2");
+    printf("Escolha o segundo operando: 1 = $S0 / 2 = $S1 / 3 = $S2 ");
     scanf("%i",&*segundo);
     printf("Escolha o terceiro operando: 1 = $S0 / 2 = $S1 / 3 = $S2 ");
     scanf("%i",&*terceiro);
 };
 
-
+void def_valores() {
+    printf("\n Escreva o valor do resgistrador $s0: ");
+    scanf("%i",&s0);
+    printf("\n Escreva o valor do registrador $s1: ");
+    scanf("%i",&s1);
+    printf("\n Escreva o valor do registrador $s2: ");
+    scanf("%i",&s2);
+};
 
 int main(){
     int menu=23;
@@ -178,13 +184,15 @@ int main(){
     int aux=1;
     int primeiro,segundo,terceiro; // operandos 
     formR r;
+    def_valores();
     while (menu != 0){
-    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD personalizado; \n2.ADD $S0,$S1,$S2  \n)");
+    printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD  \n 3.SUB");
     scanf("%i",&menu);
         switch (menu)
         {
         case 1:
-            def_valores(&primeiro,&segundo,&terceiro);
+            aux = 1;
+            def_operandos(&primeiro,&segundo,&terceiro);
             if (pc != -4){
                 pc = -4;
             };
@@ -204,6 +212,7 @@ int main(){
             };
             break;
         case 2:
+            aux = 1;
             if (pc != 4){
                 pc = 4;
             };
@@ -215,25 +224,35 @@ int main(){
                 printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
                 scanf("%i",&aux);
                 pc += 4;
-                printf("\n valor do PC: %i \n ",pc);
                 r=memoriainstrucao(pc,primeiro,segundo,terceiro);
                 r=registradores(r);
                 r=ULA(r);
                 memoriadados(r);
             };
+        case 3: 
+            aux = 1;
+            if(pc != 8) {
+                pc = 8;
+            };
+            r=memoriainstrucao(pc,primeiro,segundo,terceiro);
+            r=registradores(r);
+            r=ULA(r);
+            memoriadados(r);
+            while(aux == 1) {
+                printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
+                scanf("%i", &aux);
+                pc += 4;
+                r=memoriainstrucao(pc,primeiro,segundo,terceiro);
+                r=registradores(r);
+                r=ULA(r);
+                memoriadados(r);
+            }
             break;
 
-        
         default:
             break;
         }
-
-
-
-
     }
-
-
 
     return 0;
 }
