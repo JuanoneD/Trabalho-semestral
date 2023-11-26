@@ -91,21 +91,16 @@ void memoriadados(formR r){
 
 
 int main(){
-    // talvez não use
     printf("\n Escreva o valor do resgistrado $s0: ");
     scanf("%i",&s0);
     printf("\n Escreva o valor do registradoor $s1: ");
     scanf("%i",&s1);
     printf("\n Escreva o valor do registrador $s2: ");
     scanf("%i",&s2);
-    // fim talvez não use
     int menu=23;
     int pc=0;
+    int aux=1;
     formR r;
-    // formJ j;
-    // formI I;
-
-    // s0=18 s1=19 s2=20
     while (menu != 0){
     printf("\n ################ MENU ################ \n 0.sair \n 1.ADD $S0,$S1,$S2 \n");
     scanf("%i",&menu);
@@ -119,7 +114,17 @@ int main(){
             r=registradores(r);
             r=ULA(r);
             memoriadados(r);
-            printf("\n valor de $s0: %i",s0);
+            printf("\n valor de $s0: %i \n novo valor do pc: %i ",s0,pc);
+            while (aux == 1){
+                printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
+                scanf("%i",&aux);
+                pc += 4;
+                r=memoriainstrucao(pc);
+                r=registradores(r);
+                r=ULA(r);
+                memoriadados(r);
+            };
+
             break;
         
         default:
