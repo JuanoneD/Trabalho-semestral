@@ -29,8 +29,15 @@ formR memoriainstrucao(int i){
             r.funct = 32;
             return r;
     }else if (i == 4){
-        
-    }
+            printf("\n codigo salvo na linha 0: \n cod.intrucao: 0 /  RS: 18 / RT: 20 / RD: 19 / shamt: 0 / funct: 32");
+            r.codInst = 0;
+            r.rs = 18;
+            r.rt = 20;
+            r.rd = 19;
+            r.shamt = 0;
+            r.funct = 32;
+            return r;
+    };
 };
 
 formR registradores(formR r){
