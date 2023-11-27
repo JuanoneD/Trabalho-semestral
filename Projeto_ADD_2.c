@@ -127,6 +127,16 @@ formR memoriainstrucao(int pc,int primeiro,int segundo,int terceiro){
         r.shamt = 0;
         r.funct = 42;
         return r;
+    }else if (pc == 32){
+        printf(" \n instrucao  da linha %i: ADDU $S0,$S1,$S2",pc);
+        printf("\n codigo salvo na linha %i: \n cod.intrucao: 0 /  RS: 19 / RT: 20 / RD: 18 / shamt: 0 / funct: 33",pc);
+        r.codInst = 0;
+        r.rs = 19;
+        r.rt = 20;
+        r.rd = 18;
+        r.shamt = 0;
+        r.funct = 33;
+        return r;
     };
     return r;
 };
@@ -207,12 +217,16 @@ formR ULA(formR r){
         }else{
             r.rs = 0;
         };
+    }else if (r.codInst == 0 && r.funct == 33){
+        r.rs += r.rt;
+        printf("\n realiza a soma do rs com rt sem sinal");
+        return r;
     };
     return r;
 };
 void memoriadados(formR r){
     printf("\n########## MEMORIA DE DADOS ##########");
-    if (r.codInst == 0 && (r.funct == 32 || r.funct == 34 || r.funct == 36 || r.funct == 37 || r.funct == 0 || r.funct == 2 || r.funct == 42)){
+    if (r.codInst == 0 && (r.funct == 32 || r.funct == 34 || r.funct == 36 || r.funct == 37 || r.funct == 0 || r.funct == 2 || r.funct == 42 || r.funct == 33)){
         if (r.rd == s0){
             s0 = r.rs;
             printf("\n Devolve o valor  obitido pela a ULA  para o 1 operando");
@@ -254,12 +268,14 @@ void exe_prox(){
     while (aux == 1){
         printf("\n Executar proxima instrução?\n  1.sim 2.nao ");
         scanf("%i",&aux);
-        pc += 4;
-        printf(" valor de PC: %i",pc);
-        r=memoriainstrucao(pc,primeiro,segundo,terceiro);
-        r=registradores(r);
-        r=ULA(r);
-        memoriadados(r);
+        if (aux == 1){
+            pc += 4;
+            printf(" valor de PC: %i",pc);
+            r=memoriainstrucao(pc,primeiro,segundo,terceiro);
+            r=registradores(r);
+            r=ULA(r);
+            memoriadados(r);            
+        };
     };
 }
 
@@ -269,7 +285,7 @@ int main(){
     formR r;
     while (menu != 0){
     printf("\n ################ MENU ################\n lista de instrucoes(podem ser executadas sequencialemnte apos escolher a desejada) \n 0.sair \n 1.ADD  \n 2.SUB \n 3.AND \n 4.OR \n");
-    printf(" 5.JR \n 6.SLL \n 7.SRL \n");
+    printf(" 5.JR \n 6.SLL \n 7.SRL \n 8.SLT \n 9.ADDU");
     scanf("%i",&menu);
         switch (menu)
         {
@@ -354,6 +370,18 @@ int main(){
 
             exe_prox();
             break;
+        case 8:
+            def_valores();
+            if (pc != 28){
+                pc = 28;
+            };
+            r=memoriainstrucao(pc,primeiro,segundo,terceiro);
+            r=registradores(r);
+            r=ULA(r);
+            memoriadados(r);
+
+            exe_prox();
+        break;
         default:
             break;
         }
