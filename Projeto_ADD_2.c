@@ -466,15 +466,13 @@ int main(){
         break;
         case 12:
             def_valores();
-            if (pc != 40){
-                pc = 40;
+            if (pc != 44){
+                pc = 44;
             };
             r=memoriainstrucao(pc,primeiro,segundo,terceiro);
             r=registradores(r);
             r=ULA(r);
             memoriadados(r);
-
-            exe_prox();
         break;
         default:
             break;
