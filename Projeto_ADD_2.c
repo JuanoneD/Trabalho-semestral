@@ -382,6 +382,18 @@ int main(){
 
             exe_prox();
         break;
+        case 9:
+            def_valores();
+            if (pc != 32){
+                pc = 32;
+            };
+            r=memoriainstrucao(pc,primeiro,segundo,terceiro);
+            r=registradores(r);
+            r=ULA(r);
+            memoriadados(r);
+
+            exe_prox();
+        break;
         default:
             break;
         }
