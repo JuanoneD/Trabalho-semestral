@@ -1,1 +1,1 @@
-Trabalho da faculdade simulanda  um processador de forma simplificada 
+Trabalho da faculdade simulando um processador de forma simplificada 
