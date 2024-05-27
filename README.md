@@ -1,1 +1,1 @@
-Trabalho da faculdade simulando um processador de forma simplificada 
+Project with intuited to make a simulation of Assembly commands and how the works on processor
